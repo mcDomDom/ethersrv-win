@@ -819,6 +819,8 @@ int main(int argc, char **argv) {
   pcap_if_t	*devs[100];
   HANDLE hMutex;
 
+  DWORD dwRet = GetShortPathName("D:\\ap2_inner1.jpg", szAdapterName, 260);
+
   /* I expect at least two positional arguments, and not more than 26 */
   if (argc  < 2 || argc  > 26) {
     help();

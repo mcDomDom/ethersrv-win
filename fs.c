@@ -244,7 +244,9 @@ static long gendirlist(struct sfsdb *root, unsigned char fatflag) {
     sprintf(fullpath + fullpathoffset, "%s", diridx->d_name);
     getitemattr(fullpath, &(newnode->fprops), fatflag);
 	ret = _access(fullpath, 0x00);
+#ifdef _DEBUG
 	printf("fullpath=%s ret=%d\n", fullpath, ret);
+#endif
 	if (ret != 0) continue;	// pagefile.sys‚È‚Ç_access‚Å-1‚ª•Ô‚Á‚Ä‚­‚é
     /* add new node to linked list */
     if (lastnode == NULL) {

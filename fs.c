@@ -104,6 +104,17 @@ char upchar(char c) {
   return(c);
 }
 
+int is_sjis_lead_byte(int c)
+{
+  return (((c & 0xffu) ^ 0x20u) - 0xa1) < 94u / 2;
+}
+ 
+int is_sjis_trail_byte(int c)
+{
+  const auto t = c & 0xffu;
+  return (t - 0x40u) < (94u * 2 + 1) && t != 0x7fu;
+}
+ 
 /* translates a filename string into a fcb-style block ("FILE0001TXT") */
 void filename2fcb(char *d, char *s) {
   int i;
@@ -117,9 +128,16 @@ void filename2fcb(char *d, char *s) {
   /* fill in the filename, up to 8 chars or first dot, whichever comes first */
   for (; i < 8; i++) {
     if ((s[i] == '.') || (s[i] == 0)) break;
-    //日本語対応のため大文字変換しない
-    //d[i] = upchar(s[i]);
-	d[i] = s[i];
+	// 日本語はそのまま、ASCII文字列は大文字変換
+	if (is_sjis_lead_byte(s[i])) {
+		d[i] = s[i];
+		if (i < 7 && is_sjis_trail_byte(s[i+1])) {
+			i++;
+			d[i] = s[i];
+		}
+		continue;
+	}
+    d[i] = upchar(s[i]);
   }
   s += i;
   /* fast forward to either the first dot or NULL-terminator */
@@ -130,10 +148,19 @@ void filename2fcb(char *d, char *s) {
   d += 8;
   for (i = 0; i < 3; i++) {
     if ((s[i] == '.') || (s[i] == 0)) break;
-    //日本語対応のため大文字変換しない
-    //*d = upchar(s[i]);
-	*d = s[i];
-    d++;
+	// 日本語はそのまま、ASCII文字列は大文字変換
+	if (is_sjis_lead_byte(s[i])) {
+		*d = s[i];
+		d++;
+		if (i < 2 && is_sjis_trail_byte(s[i+1])) {
+			i++;
+			d++;
+			*d = s[i];
+		}
+		continue;
+	}
+    *d = upchar(s[i]);
+	d++;
   }
 }
 

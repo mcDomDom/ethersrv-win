@@ -79,7 +79,7 @@
       <AdditionalLibraryDirectories>D:\WpdPack\Lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) D:\EtherDFS\</Command>
+      <Command>copy $(TargetPath) .\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

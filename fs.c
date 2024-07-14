@@ -148,6 +148,7 @@ void filename2fcb(char *d, char *s) {
   d += 8;
   for (i = 0; i < 3; i++) {
     if ((s[i] == '.') || (s[i] == 0)) break;
+#if 0	// Šg’£Žq‚Í‚È‚º‚©‚¤‚Ü‚­‚¢‚©‚È‚¢‚Ì‚Å“ú–{Œê‘Î‰ž’f”O
 	// “ú–{Œê‚Í‚»‚Ì‚Ü‚ÜAASCII•¶Žš—ñ‚Í‘å•¶Žš•ÏŠ·
 	if (is_sjis_lead_byte(s[i])) {
 		*d = s[i];
@@ -159,6 +160,7 @@ void filename2fcb(char *d, char *s) {
 		}
 		continue;
 	}
+#endif
     *d = upchar(s[i]);
 	d++;
   }
